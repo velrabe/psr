@@ -9,7 +9,67 @@ document.addEventListener('DOMContentLoaded', function() {
     initModal();
     initYandexMap();
     initContactCopy();
+    initHeroGrid();
 });
+
+// Hero grid animation
+function initHeroGrid() {
+    const hero = document.getElementById('hero');
+    if (!hero) return;
+    
+    function createGridLine(isHorizontal, isTrain = false) {
+        const line = document.createElement('div');
+        line.className = `hero-grid-line ${isHorizontal ? 'horizontal' : 'vertical'} ${isTrain ? 'train-line' : ''}`;
+        
+        if (isHorizontal) {
+            // Выравниваем по сетке (50px шаг)
+            const gridPosition = Math.floor(Math.random() * Math.floor(window.innerHeight / 50)) * 50;
+            line.style.top = `${gridPosition}px`;
+            line.style.left = '-128px'; // Начинаем за левым краем
+            line.style.animationDelay = `${Math.random() * 2}s`;
+            line.style.animationDuration = isTrain ? `${1.5 + Math.random() * 1}s` : `${2 + Math.random() * 2}s`;
+        } else {
+            // Выравниваем по сетке (50px шаг)
+            const gridPosition = Math.floor(Math.random() * Math.floor(window.innerWidth / 50)) * 50;
+            line.style.left = `${gridPosition}px`;
+            line.style.top = '-128px'; // Начинаем за верхним краем
+            line.style.animationDelay = `${Math.random() * 2}s`;
+            line.style.animationDuration = isTrain ? `${1.5 + Math.random() * 1}s` : `${2 + Math.random() * 2}s`;
+        }
+        
+        hero.appendChild(line);
+        
+        // Удаляем линию после анимации
+        const duration = isTrain ? 2500 : 5000;
+        setTimeout(() => {
+            if (line.parentNode) {
+                line.parentNode.removeChild(line);
+            }
+        }, duration);
+    }
+    
+    // Создаем обычные линии периодически
+    function spawnLine() {
+        const isHorizontal = Math.random() > 0.5;
+        createGridLine(isHorizontal, false);
+        
+        // Следующая линия через случайный интервал
+        setTimeout(spawnLine, 1000 + Math.random() * 2000);
+    }
+    
+    // Создаем "поезда" (плотные линии) периодически
+    function spawnTrain() {
+        const isHorizontal = Math.random() > 0.5;
+        createGridLine(isHorizontal, true);
+        
+        // Следующий "поезд" через случайный интервал
+        setTimeout(spawnTrain, 2000 + Math.random() * 3000);
+    }
+    
+    // Начинаем создавать линии сразу
+    spawnLine();
+    spawnTrain();
+}
 
 // Header scroll effect
 function initHeader() {
@@ -88,10 +148,17 @@ function renderCatalog() {
             productCard.dataset.categoryId = category.id;
             productCard.addEventListener('click', () => openProductModal(product.id, category.id));
 
+            // Извлекаем артикул из названия (последние цифры)
+            const articleMatch = product.name.match(/(\d+)(?:\s|$)/);
+            const article = articleMatch ? articleMatch[1] : product.id.split('-').pop();
+            
             productCard.innerHTML = `
-                <div class="product-image-placeholder"></div>
+                <div class="product-image-placeholder">
+                    <span class="product-article">${article}</span>
+                </div>
                 <h4 class="product-title">${product.name}</h4>
                 <p class="product-description">${product.description ? product.description.substring(0, 150) + (product.description.length > 150 ? '...' : '') : ''}</p>
+                <span class="product-more-link">Подробнее <span class="arrow">→</span></span>
             `;
 
             productsGrid.appendChild(productCard);
@@ -152,8 +219,14 @@ function openProductModal(productId, categoryId) {
         return html;
     };
     
+    // Извлекаем артикул из названия
+    const articleMatch = product.name.match(/(\d+)(?:\s|$)/);
+    const article = articleMatch ? articleMatch[1] : product.id.split('-').pop();
+    
     modalBody.innerHTML = `
-        <div class="modal-product-image-placeholder"></div>
+        <div class="modal-product-image-placeholder">
+            <span class="product-article">${article}</span>
+        </div>
         <h2 class="modal-product-title">${product.name}</h2>
         <div class="modal-product-content">
             ${product.description ? `<div class="modal-section">${formatDescription(product.description)}</div>` : ''}
