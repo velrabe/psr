@@ -133,7 +133,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #000;
+    background: #000 !important;
     position: relative;
     overflow: hidden;
 }
@@ -149,7 +149,7 @@ body {
         linear-gradient(rgba(100, 100, 100, 0.15) 1px, transparent 1px),
         linear-gradient(90deg, rgba(100, 100, 100, 0.15) 1px, transparent 1px);
     background-size: 50px 50px;
-    opacity: 1;
+    opacity: 1 !important;
     pointer-events: none;
     z-index: 0;
 }
