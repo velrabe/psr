@@ -114,24 +114,114 @@ function openProductModal(productId, categoryId) {
     const modal = document.getElementById('product-modal');
     const modalBody = document.getElementById('modal-body');
 
+    // Форматируем описание с заголовками
+    const formatDescription = (text) => {
+        if (!text) return '';
+        // Разбиваем на абзацы по заголовкам
+        const lines = text.split('\n').filter(l => l.trim());
+        let html = '';
+        let inList = false;
+        
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (!line) continue;
+            
+            // Определяем заголовки
+            if (line.match(/^(О товаре|Применение|Форма поставки|Срок годности|Техника безопасности|Подготовка основания|Способ приготовления|Способ применения|Расход|Рекомендации|ТУ|Технические характеристики|Состав|Внешний вид):?$/i)) {
+                if (inList) {
+                    html += '</ul>';
+                    inList = false;
+                }
+                html += `<h3>${line.replace(':', '')}</h3>`;
+            } else if (line.match(/^[-•]\s/) || line.match(/^\d+[\.\)]\s/)) {
+                // Список
+                if (!inList) {
+                    html += '<ul>';
+                    inList = true;
+                }
+                html += `<li>${line.replace(/^[-•]\s/, '').replace(/^\d+[\.\)]\s/, '')}</li>`;
+            } else {
+                if (inList) {
+                    html += '</ul>';
+                    inList = false;
+                }
+                html += `<p>${line}</p>`;
+            }
+        }
+        if (inList) html += '</ul>';
+        return html;
+    };
+    
     modalBody.innerHTML = `
         <div class="modal-product-image-placeholder"></div>
         <h2 class="modal-product-title">${product.name}</h2>
-        <p class="modal-product-description">${product.description || ''}</p>
-        <div class="modal-product-details">
+        <div class="modal-product-content">
+            ${product.description ? `<div class="modal-section">${formatDescription(product.description)}</div>` : ''}
+            ${product.delivery_form ? `
+            <div class="modal-section">
+                <h3>Форма поставки</h3>
+                <p>${product.delivery_form}</p>
+            </div>
+            ` : ''}
+            ${product.shelf_life ? `
+            <div class="modal-section">
+                <h3>Срок годности и условия хранения</h3>
+                <p>${product.shelf_life}</p>
+            </div>
+            ` : ''}
+            ${product.safety ? `
+            <div class="modal-section">
+                <h3>Техника безопасности</h3>
+                <p>${product.safety}</p>
+            </div>
+            ` : ''}
+            ${product.preparation ? `
+            <div class="modal-section">
+                <h3>Подготовка основания</h3>
+                ${formatDescription(product.preparation)}
+            </div>
+            ` : ''}
+            ${product.preparation_method ? `
+            <div class="modal-section">
+                <h3>Способ приготовления</h3>
+                ${formatDescription(product.preparation_method)}
+            </div>
+            ` : ''}
+            ${product.application_method ? `
+            <div class="modal-section">
+                <h3>Способ применения</h3>
+                ${formatDescription(product.application_method)}
+            </div>
+            ` : ''}
+            ${product.recommendations ? `
+            <div class="modal-section">
+                <h3>Рекомендации</h3>
+                ${formatDescription(product.recommendations)}
+            </div>
+            ` : ''}
+            ${product.tu ? `
+            <div class="modal-section">
+                <h3>ТУ</h3>
+                <p>${product.tu}</p>
+            </div>
+            ` : ''}
+            ${product.technical_characteristics && Object.keys(product.technical_characteristics).length > 0 ? `
+            <div class="modal-section">
+                <h3>Технические характеристики</h3>
+                <table class="technical-table">
+                    ${Object.entries(product.technical_characteristics).map(([key, value]) => 
+                        `<tr><td><strong>${key}</strong></td><td>${value}</td></tr>`
+                    ).join('')}
+                </table>
+            </div>
+            ` : ''}
             ${product.specifications && product.specifications.length > 0 ? `
-            <h3>Характеристики</h3>
-            <ul>
-                ${product.specifications.map(spec => `<li>${spec}</li>`).join('')}
-            </ul>
-            ` : ''}
-            ${product.application ? `
-            <h3>Применение</h3>
-            <p>${product.application}</p>
-            ` : ''}
-            ${product.consumption ? `
-            <h3>Расход</h3>
-            <p>${product.consumption}</p>
+            <div class="modal-section">
+                <h3>Характеристики</h3>
+                <ul>
+                    ${product.specifications.map(spec => `<li>${spec}</li>`).join('')}
+                </ul>
+            </div>
             ` : ''}
         </div>
     `;

@@ -419,29 +419,64 @@ section {
     margin-bottom: 30px;
 }
 
-.modal-product-details {
+.modal-product-content {
     margin-top: 30px;
 }
 
-.modal-product-details h3 {
+.modal-section {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-section:last-child {
+    border-bottom: none;
+}
+
+.modal-section h3 {
     font-size: 20px;
     margin-bottom: 15px;
     color: var(--primary-color);
+    font-weight: 600;
 }
 
-.modal-product-details ul {
-    list-style: none;
-    padding-left: 0;
+.modal-section p {
+    color: var(--secondary-color);
+    line-height: 1.8;
+    margin-bottom: 15px;
 }
 
-.modal-product-details li {
-    padding: 10px 0;
+.modal-section ul {
+    list-style: disc;
+    padding-left: 25px;
+    margin-bottom: 15px;
+}
+
+.modal-section li {
+    color: var(--secondary-color);
+    line-height: 1.8;
+    margin-bottom: 8px;
+}
+
+.technical-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.technical-table tr {
     border-bottom: 1px solid var(--border-color);
+}
+
+.technical-table td {
+    padding: 12px;
     color: var(--secondary-color);
 }
 
-.modal-product-details li:last-child {
-    border-bottom: none;
+.technical-table td:first-child {
+    width: 40%;
+    color: var(--primary-color);
+    font-weight: 500;
 }
 
 /* Responsive */
