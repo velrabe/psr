@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ПСР - Материалы для реставрации и строительства</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="header-container">
+            <div class="logo-placeholder">
+                <!-- Место для логотипа -->
+            </div>
+            <div class="header-contacts">
+                <a href="tel:+78003509659" class="contact-link" data-copy="+7 800 350 96 59">
+                    <span class="contact-text">+7 800 350 96 59</span>
+                    <span class="tooltip">Телефон успешно скопирован</span>
+                </a>
+                <a href="mailto:sales@stone-technology.info" class="contact-link" data-copy="sales@stone-technology.info">
+                    <span class="contact-text">sales@stone-technology.info</span>
+                    <span class="tooltip">Email успешно скопирован</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <h1>ПСР</h1>
+        </div>
+    </section>
+
+    <!-- Catalog Section -->
+    <section class="catalog-section" id="catalog">
+        <div class="container">
+            <h2 class="section-title">Наши товары</h2>
+            <div id="catalog-container">
+                <!-- Каталог будет загружен через JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Us Section -->
+    <section class="why-us-section" id="why-us">
+        <div class="container">
+            <h2 class="section-title">Почему мы</h2>
+            <div class="advantages-grid">
+                <div class="advantage-item">
+                    <h3>Преимущество 1</h3>
+                    <p>Описание преимущества</p>
+                </div>
+                <div class="advantage-item">
+                    <h3>Преимущество 2</h3>
+                    <p>Описание преимущества</p>
+                </div>
+                <div class="advantage-item">
+                    <h3>Преимущество 3</h3>
+                    <p>Описание преимущества</p>
+                </div>
+                <div class="advantage-item">
+                    <h3>Преимущество 4</h3>
+                    <p>Описание преимущества</p>
+                </div>
+                <div class="advantage-item">
+                    <h3>Преимущество 5</h3>
+                    <p>Описание преимущества</p>
+                </div>
+                <div class="advantage-item">
+                    <h3>Преимущество 6</h3>
+                    <p>Описание преимущества</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contacts Section -->
+    <section class="contacts-section" id="contacts">
+        <div class="container">
+            <h2 class="section-title">Контакты</h2>
+            <div class="contacts-content">
+                <div class="contacts-info">
+                    <div class="contact-item">
+                        <h3>Телефон</h3>
+                        <p>+7 800 350 96 59</p>
+                        <p>+7 499 325 77 37 (Москва)</p>
+                        <p>+7 812 240 73 37 (Санкт-Петербург)</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>Email</h3>
+                        <p>sales@stone-technology.info</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>Адрес</h3>
+                        <p>Санкт-Петербург, вторая линия Васильевского Острова, дом 5 корпус Б</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>Режим работы</h3>
+                        <p>Пн. – Пт.: с 10:00 до 18:00</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>Реквизиты</h3>
+                        <p>Здесь будут реквизиты компании</p>
+                    </div>
+                </div>
+                <div class="map-container">
+                    <div id="yandex-map"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="footer">
+        <div class="container">
+            <div class="footer-catalog" id="footer-catalog">
+                <!-- Навигация по каталогу будет загружена через JavaScript -->
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 ПСР | Материалы для реставрации и строительства</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal Window -->
+    <div class="modal" id="product-modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">&times;</button>
+            <div id="modal-body">
+                <!-- Содержимое модального окна -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Яндекс карта - замените YOUR_API_KEY на ваш ключ -->
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=YOUR_API_KEY&lang=ru_RU" type="text/javascript"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+

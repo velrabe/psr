@@ -1,0 +1,27 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Downloaded site files
+utils/downloaded_site/
+utils/downloaded_site_selenium/
+utils/venv/
+utils/parse_log.txt
+utils/*.pyc
+utils/__pycache__/
+
+
