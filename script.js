@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initContactForm();
     initScrollToTop();
     initHeaderCatalog();
+    initImportListModal();
 });
 
 // Hero grid animation
@@ -277,12 +278,29 @@ function openProductModal(productId, categoryId) {
         ? `<div class="modal-product-tags">${product.tags.map(tag => `<span class="product-tag">${tag}</span>`).join('')}</div>`
         : '';
     
+    const productUrl = `${window.location.origin}${window.location.pathname}?product=${product.id}`;
+    
     modalBody.innerHTML = `
-        <div class="modal-product-image-placeholder">
-            <span class="product-article">${article}</span>
+        <div class="modal-product-header">
+            <div class="modal-header">
+                <div class="modal-header-top">
+                    <h2 class="modal-product-title">${product.name}</h2>
+                    <button type="button" class="modal-close-inline" aria-label="Закрыть">&times;</button>
+                </div>
+                <div class="modal-header-bottom">
+                    ${tagsHtml}
+                    <div class="modal-product-actions">
+                        <button type="button" class="modal-copy-link" data-url="${productUrl}" title="Скопировать ссылку на товар">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                            <span class="modal-copy-tooltip">Ссылка на товар скопирована</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <h2 class="modal-product-title">${product.name}</h2>
-        ${tagsHtml}
         <div class="modal-product-content">
             ${product.description ? `<div class="modal-section">${formatDescription(product.description)}</div>` : ''}
             ${product.delivery_form ? `
@@ -356,6 +374,43 @@ function openProductModal(productId, categoryId) {
 
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
+    
+    // Инициализируем копирование ссылки
+    const copyBtn = modalBody.querySelector('.modal-copy-link');
+    if (copyBtn) {
+        const urlToCopy = copyBtn.dataset.url;
+        
+        const showCopyTooltip = () => {
+            copyBtn.classList.add('copied');
+            setTimeout(() => {
+                copyBtn.classList.remove('copied');
+            }, 2000);
+        };
+        
+        copyBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(urlToCopy).then(showCopyTooltip).catch(err => {
+                    console.error('Ошибка копирования ссылки на товар:', err);
+                });
+            } else {
+                // Fallback
+                const temp = document.createElement('textarea');
+                temp.value = urlToCopy;
+                temp.style.position = 'fixed';
+                temp.style.opacity = '0';
+                document.body.appendChild(temp);
+                temp.select();
+                try {
+                    document.execCommand('copy');
+                    showCopyTooltip();
+                } catch (err) {
+                    console.error('Ошибка копирования ссылки на товар:', err);
+                }
+                document.body.removeChild(temp);
+            }
+        });
+    }
 
     // Update URL without reload
     const newUrl = `${window.location.pathname}?product=${productId}`;
@@ -379,8 +434,17 @@ function initModal() {
     const modalClose = document.getElementById('modal-close');
     const modalOverlay = modal.querySelector('.modal-overlay');
 
-    modalClose.addEventListener('click', closeModal);
+    if (modalClose) {
+        modalClose.addEventListener('click', closeModal);
+    }
     modalOverlay.addEventListener('click', closeModal);
+
+    // Делегируем клик по встроенной кнопке закрытия в шапке модалки
+    modal.addEventListener('click', (e) => {
+        if (e.target.closest('.modal-close-inline')) {
+            closeModal();
+        }
+    });
 
     // Close on Escape key
     document.addEventListener('keydown', function(e) {
@@ -578,7 +642,7 @@ function initYandexMap() {
 
                     // Добавляем метку
                     const placemark = new ymaps.Placemark([59.9414, 30.2808], {
-                        balloonContent: 'Санкт-Петербург, вторая линия Васильевского Острова, дом 5 корпус Б'
+                        balloonContent: 'Санкт-Петербург, вторая линия Васильевского Острова, дом 5'
                     }, {
                         preset: 'islands#blueDotIcon'
                     });
@@ -869,3 +933,37 @@ document.addEventListener('click', function(e) {
     }
 });
 
+
+
+// Import List Modal
+function initImportListModal() {
+    const link = document.getElementById('import-list-link');
+    const modal = document.getElementById('import-modal');
+    if (!link || !modal) return;
+
+    const closeBtn = document.getElementById('import-modal-close');
+    const overlay = modal.querySelector('.document-modal-overlay');
+
+    const open = (e) => {
+        if (e) e.preventDefault();
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    };
+
+    const close = () => {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    };
+
+    link.addEventListener('click', open);
+    if (closeBtn) closeBtn.addEventListener('click', close);
+    if (overlay) overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) close();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            close();
+        }
+    });
+}
