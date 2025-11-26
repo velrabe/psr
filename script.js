@@ -175,12 +175,15 @@ function renderCatalog() {
     
     container.innerHTML = '';
 
+    const hiddenArticles = [660, 641]; // товары, которые нужно скрыть независимо от наличия
+
     catalogData.categories.forEach(category => {
-        // Сначала фильтруем товары - оставляем только те, у которых артикул < 1000
+        // Сначала фильтруем товары - оставляем только те, у которых артикул < 1000 и не в списке скрытых
         const visibleProducts = category.products.filter(product => {
             const articleMatch = product.name.match(/(\d+)(?:\s|$)/);
             const article = articleMatch ? articleMatch[1] : product.id.split('-').pop();
             const articleNumber = parseInt(article, 10);
+            if (hiddenArticles.includes(articleNumber)) return false;
             return articleNumber < 1000;
         });
         
@@ -242,11 +245,12 @@ function openProductModal(productId, categoryId) {
 
     if (!product) return;
     
-    // Проверяем артикул - не показываем товары с артикулом 1000+
+    // Проверяем артикул - не показываем товары с артикулом 1000+ и скрытые артикула
     const articleMatch = product.name.match(/(\d+)(?:\s|$)/);
     const article = articleMatch ? articleMatch[1] : product.id.split('-').pop();
     const articleNumber = parseInt(article, 10);
-    if (articleNumber >= 1000) {
+    const hiddenArticles = [660, 641];
+    if (articleNumber >= 1000 || hiddenArticles.includes(articleNumber)) {
         return;
     }
 
@@ -504,7 +508,8 @@ function openProductFromURL(articleParam) {
             const articleMatch = product.name.match(/(\d+)(?:\s|$)/);
             const article = articleMatch ? articleMatch[1] : product.id.split('-').pop();
             const articleNumber = parseInt(article, 10);
-            if (articleNumber >= 1000) {
+            const hiddenArticles = [660, 641];
+            if (articleNumber >= 1000 || hiddenArticles.includes(articleNumber)) {
                 continue; // не показываем скрытые товары
             }
             if (article === target) {
@@ -529,12 +534,15 @@ function renderFooterCatalog() {
     const footerCatalog = document.getElementById('footer-catalog');
     footerCatalog.innerHTML = '';
 
+    const hiddenArticles = [660, 641];
+
     catalogData.categories.forEach(category => {
         // Фильтруем товары с артикулом 1000+
         const visibleProducts = category.products.filter(product => {
             const articleMatch = product.name.match(/(\d+)(?:\s|$)/);
             const article = articleMatch ? articleMatch[1] : product.id.split('-').pop();
             const articleNumber = parseInt(article, 10);
+            if (hiddenArticles.includes(articleNumber)) return false;
             return articleNumber < 1000;
         });
 
