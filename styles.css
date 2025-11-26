@@ -65,8 +65,11 @@ body {
     padding: 0;
     margin-left: 12px;
     cursor: pointer;
+    display: none;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+    gap: 4px;
     flex-shrink: 0;
 }
 
@@ -77,14 +80,11 @@ body {
     background: var(--primary-color);
     border-radius: 999px;
     transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.header-burger span + span {
-    margin-top: 4px;
+    transform-origin: center;
 }
 
 .header-burger.active span:nth-child(1) {
-    transform: translateY(6px) rotate(45deg);
+    transform: rotate(45deg);
 }
 
 .header-burger.active span:nth-child(2) {
@@ -92,7 +92,7 @@ body {
 }
 
 .header-burger.active span:nth-child(3) {
-    transform: translateY(-6px) rotate(-45deg);
+    transform: rotate(-45deg);
 }
 
 .header-logo {
