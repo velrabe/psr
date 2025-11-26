@@ -2,6 +2,38 @@
 let catalogData = null;
 let currentProductId = null;
 
+// Локальные изображения для товаров по артикулу
+const productImages = {
+    '122': 'img/items/122.jpeg',
+    '132': 'img/items/132.jpeg',
+    '140': 'img/items/140.jpeg',
+    '162': 'img/items/162.jpeg',
+    '170': 'img/items/170.jpeg',
+    '210': 'img/items/210.png',
+    '230': 'img/items/230.jpg',
+    '241': 'img/items/241.jpeg',
+    '251': 'img/items/241.jpeg',
+    '311': 'img/items/311.jpeg',
+    '321': 'img/items/321.jpeg',
+    '412': 'img/items/412.jpeg',
+    '422': 'img/items/422.png',
+    '510': 'img/items/510.png',
+    '521': 'img/items/521.jpeg',
+    '641': 'img/items/641.png',
+    '711': 'img/items/711.jpeg',
+    '720': 'img/items/720.png',
+    '731': 'img/items/731.png',
+    '771': 'img/items/771.jpeg'
+};
+
+// Вспомогательный метод: получить артикул товара из названия или id
+function getProductArticle(product) {
+    // Берём ПОСЛЕДНЮЮ группу цифр в названии (чтобы корректно обрабатывать 660-В и т.п.)
+    const match = product.name.match(/(\d+)(?!.*\d)/);
+    const article = match ? match[1] : product.id.split('-').pop();
+    return article;
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     initHeader();
@@ -180,8 +212,7 @@ function renderCatalog() {
     catalogData.categories.forEach(category => {
         // Сначала фильтруем товары - оставляем только те, у которых артикул < 1000 и не в списке скрытых
         const visibleProducts = category.products.filter(product => {
-            const articleMatch = product.name.match(/(\d+)(?:\s|$)/);
-            const article = articleMatch ? articleMatch[1] : product.id.split('-').pop();
+            const article = getProductArticle(product);
             const articleNumber = parseInt(article, 10);
             if (hiddenArticles.includes(articleNumber)) return false;
             return articleNumber < 1000;
@@ -205,8 +236,8 @@ function renderCatalog() {
 
         visibleProducts.forEach(product => {
             // Извлекаем артикул из названия (последние цифры)
-            const articleMatch = product.name.match(/(\d+)(?:\s|$)/);
-            const article = articleMatch ? articleMatch[1] : product.id.split('-').pop();
+            const article = getProductArticle(product);
+            const imageSrc = productImages[article];
             
             const productCard = document.createElement('div');
             productCard.className = 'product-card';
@@ -221,7 +252,9 @@ function renderCatalog() {
             
             productCard.innerHTML = `
                 <div class="product-image-placeholder">
-                    <span class="product-article">${article}</span>
+                    ${imageSrc
+                        ? `<img src="${imageSrc}" alt="${product.name}" class="product-image">`
+                        : `<span class="product-article">${article}</span>`}
                 </div>
                 <h4 class="product-title">${product.name}</h4>
                 <p class="product-description">${product.description ? product.description.substring(0, 150) + (product.description.length > 150 ? '...' : '') : ''}</p>
@@ -505,8 +538,7 @@ function openProductFromURL(articleParam) {
 
     for (const category of catalogData.categories) {
         for (const product of category.products) {
-            const articleMatch = product.name.match(/(\d+)(?:\s|$)/);
-            const article = articleMatch ? articleMatch[1] : product.id.split('-').pop();
+            const article = getProductArticle(product);
             const articleNumber = parseInt(article, 10);
             const hiddenArticles = [660, 641];
             if (articleNumber >= 1000 || hiddenArticles.includes(articleNumber)) {
@@ -539,8 +571,7 @@ function renderFooterCatalog() {
     catalogData.categories.forEach(category => {
         // Фильтруем товары с артикулом 1000+
         const visibleProducts = category.products.filter(product => {
-            const articleMatch = product.name.match(/(\d+)(?:\s|$)/);
-            const article = articleMatch ? articleMatch[1] : product.id.split('-').pop();
+            const article = getProductArticle(product);
             const articleNumber = parseInt(article, 10);
             if (hiddenArticles.includes(articleNumber)) return false;
             return articleNumber < 1000;
@@ -567,6 +598,7 @@ function renderFooterCatalog() {
         productsDiv.style.display = 'none'; // По умолчанию свернуто
 
         visibleProducts.forEach(product => {
+            const article = getProductArticle(product);
             const productLink = document.createElement('a');
             productLink.className = 'footer-product-link';
             productLink.href = `?product=${article}`;
