@@ -297,7 +297,7 @@ function openProductModal(productId, categoryId) {
         ? `<div class="modal-product-tags">${product.tags.map(tag => `<span class="product-tag">${tag}</span>`).join('')}</div>`
         : '';
     
-    const productUrl = `${window.location.origin}${window.location.pathname}?product=${product.id}`;
+    const productUrl = `${window.location.origin}${window.location.pathname}?product=${article}`;
     
     modalBody.innerHTML = `
         <div class="modal-product-header">
@@ -431,9 +431,9 @@ function openProductModal(productId, categoryId) {
         });
     }
 
-    // Update URL without reload
-    const newUrl = `${window.location.pathname}?product=${productId}`;
-    window.history.pushState({ product: productId }, '', newUrl);
+    // Update URL без перезагрузки — используем артикул как идентификатор
+    const newUrl = `${window.location.pathname}?product=${article}`;
+    window.history.pushState({ product: article }, '', newUrl);
 }
 
 // Close modal
@@ -494,30 +494,32 @@ function handleURLParams() {
     }
 }
 
-// Open product from URL
-function openProductFromURL(productId) {
+// Open product from URL (по артикулу)
+function openProductFromURL(articleParam) {
+    if (!catalogData || !articleParam) return;
+    const target = articleParam.toString().trim();
+
     for (const category of catalogData.categories) {
-        const product = category.products.find(p => p.id === productId);
-        if (product) {
-            // Проверяем артикул - не показываем товары с артикулом 1000+
+        for (const product of category.products) {
             const articleMatch = product.name.match(/(\d+)(?:\s|$)/);
             const article = articleMatch ? articleMatch[1] : product.id.split('-').pop();
             const articleNumber = parseInt(article, 10);
             if (articleNumber >= 1000) {
-                return; // Не открываем товары с артикулом 1000+
+                continue; // не показываем скрытые товары
             }
-            
-            // Scroll to category and open modal
-            setTimeout(() => {
-                const categoryElement = document.getElementById(`category-${category.id}`);
-                if (categoryElement) {
-                    categoryElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
+            if (article === target) {
+                // Scroll to category and open modal
                 setTimeout(() => {
-                    openProductModal(productId, category.id);
+                    const categoryElement = document.getElementById(`category-${category.id}`);
+                    if (categoryElement) {
+                        categoryElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                    setTimeout(() => {
+                        openProductModal(product.id, category.id);
+                    }, 500);
                 }, 500);
-            }, 500);
-            break;
+                return;
+            }
         }
     }
 }
@@ -559,17 +561,11 @@ function renderFooterCatalog() {
         visibleProducts.forEach(product => {
             const productLink = document.createElement('a');
             productLink.className = 'footer-product-link';
-            productLink.href = `?product=${product.id}`;
+            productLink.href = `?product=${article}`;
             productLink.textContent = product.name;
             productLink.addEventListener('click', (e) => {
                 e.preventDefault();
-                const categoryElement = document.getElementById(`category-${category.id}`);
-                if (categoryElement) {
-                    categoryElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    setTimeout(() => {
-                        openProductModal(product.id, category.id);
-                    }, 500);
-                }
+                openProductFromURL(article);
             });
 
             productsDiv.appendChild(productLink);
