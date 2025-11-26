@@ -55,6 +55,46 @@ body {
     align-items: center;
 }
 
+.header-burger {
+    display: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: #fff;
+    padding: 0;
+    margin-left: 12px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.header-burger span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: var(--primary-color);
+    border-radius: 999px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.header-burger span + span {
+    margin-top: 4px;
+}
+
+.header-burger.active span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+}
+
+.header-burger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.header-burger.active span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+}
+
 .header-logo {
     display: flex;
     align-items: center;
@@ -1092,10 +1132,11 @@ section {
 }
 
 .import-modal-title {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 500;
     line-height: 1.4;
     margin-right: 16px;
+    word-break: break-word;
 }
 
 .import-modal-body {
@@ -1642,16 +1683,36 @@ section {
 
 /* Responsive */
 @media (max-width: 768px) {
+    .header-burger {
+        display: flex;
+    }
+
     .header-nav {
-        gap: 15px;
+        position: fixed;
+        top: var(--header-height);
+        left: 0;
+        right: 0;
+        background: #fff;
+        border-bottom: 1px solid var(--border-color);
+        padding: 16px 20px 20px;
+        display: none;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        z-index: 999;
+    }
+
+    .header-nav.open {
+        display: flex;
     }
     
     .header-nav-link {
-        font-size: 14px;
+        font-size: 15px;
     }
     
     .header-contacts {
         gap: 4px;
+        align-items: flex-start;
     }
     
     .contact-link {
@@ -1659,12 +1720,13 @@ section {
     }
     
     .header-catalog-btn {
-        font-size: 14px;
+        font-size: 15px;
     }
     
     .header-catalog-menu {
-        right: 0;
-        left: auto;
+        position: static;
+        box-shadow: none;
+        margin-top: 8px;
     }
     
     .scroll-to-top {

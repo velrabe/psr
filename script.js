@@ -80,6 +80,8 @@ function initHeroGrid() {
 // Header scroll effect
 function initHeader() {
     const header = document.getElementById('header');
+    const burger = document.getElementById('header-burger');
+    const headerNav = document.getElementById('header-nav');
     
     window.addEventListener('scroll', function() {
         if (window.scrollY > 50) {
@@ -88,6 +90,23 @@ function initHeader() {
             header.classList.remove('scrolled');
         }
     });
+
+    if (burger && headerNav) {
+        burger.addEventListener('click', () => {
+            const isOpen = headerNav.classList.toggle('open');
+            burger.classList.toggle('active', isOpen);
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+        });
+
+        // Закрываем меню при клике по ссылкам
+        headerNav.addEventListener('click', (e) => {
+            if (e.target.closest('a')) {
+                headerNav.classList.remove('open');
+                burger.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+    }
 }
 
 // Load catalog from JSON
