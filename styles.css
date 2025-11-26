@@ -1728,6 +1728,32 @@ section {
         box-shadow: none;
         margin-top: 8px;
     }
+
+    /* Product modal – mobile adjustments */
+    .modal-content {
+        padding: 16px 16px 20px;
+        margin: 10px auto;
+    }
+
+    .modal-product-header {
+        padding-bottom: 8px;
+        margin-bottom: 8px;
+    }
+
+    .modal-header-top {
+        align-items: flex-start;
+    }
+
+    .modal-product-title {
+        font-size: 22px;
+        line-height: 1.2;
+    }
+
+    .modal-header-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
     
     .scroll-to-top {
         bottom: 20px;
