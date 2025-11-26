@@ -10,30 +10,147 @@
     <!-- Header -->
     <header class="header" id="header">
         <div class="header-container">
-            <div class="logo-placeholder">
+            <div class="header-logo">
                 <img src="psr-compact.svg" alt="ПСР" class="logo">
             </div>
-            <div class="header-contacts">
-                <a href="tel:+78003509659" class="contact-link" data-copy="+7 800 350 96 59">
-                    <span class="contact-text">+7 800 350 96 59</span>
-                    <span class="tooltip">Телефон успешно скопирован</span>
-                </a>
-                <a href="mailto:sales@stone-technology.info" class="contact-link" data-copy="sales@stone-technology.info">
-                    <span class="contact-text">sales@stone-technology.info</span>
-                    <span class="tooltip">Email успешно скопирован</span>
-                </a>
+            <div class="header-nav">
+                <a href="#about" class="header-nav-link">О нас</a>
+                <a href="#contacts" class="header-nav-link">Контакты</a>
+                <div class="header-catalog-dropdown" id="header-catalog-dropdown">
+                    <button class="header-catalog-btn" id="header-catalog-btn">Каталог</button>
+                    <div class="header-catalog-menu" id="header-catalog-menu">
+                        <!-- Категории будут загружены через JavaScript -->
+                    </div>
+                </div>
+                <div class="header-contacts">
+                    <a href="tel:+78003509659" class="contact-link" data-copy="+7 800 350 96 59">
+                        <span class="contact-text">+7 800 350 96 59</span>
+                        <span class="tooltip">Телефон успешно скопирован</span>
+                    </a>
+                    <a href="mailto:sales@stone-technology.info" class="contact-link" data-copy="sales@stone-technology.info">
+                        <span class="contact-text">sales@stone-technology.info</span>
+                        <span class="tooltip">Email успешно скопирован</span>
+                    </a>
+                </div>
             </div>
         </div>
     </header>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" id="scroll-to-top" aria-label="Наверх">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
 
     <!-- Hero Section -->
     <section class="hero" id="hero">
         <div class="hero-content">
             <img src="psr-logo.svg" alt="ПСР" class="hero-logo-top">
-            <h1 class="hero-title">Материалы для строительства и реставрации</h1>
+            <h1 class="hero-title">Строительно-реставрационные работы любой сложности</h1>
+            <p class="hero-subtitle">Используем и производим материалы STONE по коммерческой концессии, имеем лицензию минкульта</p>
             <div class="hero-buttons">
-                <a href="#catalog" class="hero-button hero-button-primary">Смотреть каталог</a>
+                <a href="#catalog" class="hero-button hero-button-primary">Каталог</a>
                 <a href="#contacts" class="hero-button hero-button-secondary">Контакты</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Company Section -->
+    <section class="about-section" id="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-features">
+                    <div class="about-feature">
+                        <span class="about-feature-number">15+</span>
+                        <span class="about-feature-text">лет опыта</span>
+                    </div>
+                    <div class="about-feature">
+                        <span class="about-feature-text">Собственная производственная база</span>
+                    </div>
+                    <div class="about-feature">
+                        <span class="about-feature-text">Право на использование и производство продукции STONE</span>
+                    </div>
+                </div>
+                <div class="about-text">
+                    <p>ПСР выполняет строительные и реставрационные работы, включая объекты культурного наследия.</p>
+                    <p>Компания обладает лицензией Министерства культуры РФ и членством в СРО.</p>
+                    <p>Мы используем и производим материалы STONE на основании договора коммерческой концессии.</p>
+                    <p>Материалы включены в перечень импортозамещения, рекомендованный комитетом по сохранению памятников.</p>
+                </div>
+                <button class="about-contact-btn" id="about-contact-btn">Связаться с нами</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Dropdown -->
+    <div class="contact-dropdown" id="contact-dropdown">
+        <div class="contact-dropdown-overlay"></div>
+        <div class="contact-dropdown-content">
+            <button class="contact-dropdown-close" id="contact-dropdown-close">&times;</button>
+            <h3>Контакты</h3>
+            <div class="contact-dropdown-item">
+                <strong>Email:</strong>
+                <div class="contact-dropdown-value">
+                    <a href="mailto:sales@stone-technology.info">sales@stone-technology.info</a>
+                    <button class="contact-copy-btn" data-copy="sales@stone-technology.info" title="Копировать">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="contact-dropdown-item">
+                <strong>Телефон:</strong>
+                <div class="contact-dropdown-value">
+                    <a href="tel:+78003509659">+7 800 350 96 59</a>
+                    <button class="contact-copy-btn" data-copy="+7 800 350 96 59" title="Копировать">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Directions Section -->
+    <section class="directions-section" id="directions">
+        <div class="container">
+            <h2 class="section-title">Ключевые направления работ</h2>
+            <div class="directions-grid">
+                <div class="direction-card">
+                    <div class="direction-image">
+                        <img src="img/directions/outdoor.png" alt="Реставрация фасадов">
+                    </div>
+                    <h3>Реставрация фасадов</h3>
+                </div>
+                <div class="direction-card">
+                    <div class="direction-image">
+                        <img src="img/directions/indoor.png" alt="Реставрация интерьеров">
+                    </div>
+                    <h3>Реставрация интерьеров</h3>
+                </div>
+                <div class="direction-card">
+                    <div class="direction-image">
+                        <img src="img/directions/conservation.png" alt="Консервация объектов культурного наследия">
+                    </div>
+                    <h3>Консервация объектов культурного наследия</h3>
+                </div>
+                <div class="direction-card">
+                    <div class="direction-image">
+                        <img src="img/directions/montage.png" alt="Монтаж/облицовка современными композитами">
+                    </div>
+                    <h3>Монтаж/облицовка современными композитами</h3>
+                </div>
+                <div class="direction-card">
+                    <div class="direction-image">
+                        <img src="img/directions/decoration.png" alt="Производство декоративных материалов">
+                    </div>
+                    <h3>Производство декоративных материалов</h3>
+                </div>
             </div>
         </div>
     </section>
@@ -41,45 +158,104 @@
     <!-- Catalog Section -->
     <section class="catalog-section" id="catalog">
         <div class="container">
-            <h2 class="section-title">Наши товары</h2>
+            <h2 class="section-title">Материалы STONE</h2>
             <div id="catalog-container">
                 <!-- Каталог будет загружен через JavaScript -->
             </div>
         </div>
     </section>
 
-    <!-- Why Us Section -->
-    <section class="why-us-section" id="why-us">
+    <!-- Advantages Section -->
+    <section class="advantages-section" id="advantages">
         <div class="container">
-            <h2 class="section-title">Почему мы</h2>
+            <h2 class="section-title">Преимущества ПСР</h2>
             <div class="advantages-grid">
                 <div class="advantage-item">
-                    <h3>Преимущество 1</h3>
-                    <p>Описание преимущества</p>
+                    <div class="advantage-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                    </div>
+                    <h3>Лицензия Минкульта</h3>
+                    <p>Право работать с объектами культурного наследия</p>
                 </div>
                 <div class="advantage-item">
-                    <h3>Преимущество 2</h3>
-                    <p>Описание преимущества</p>
+                    <div class="advantage-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="9" y1="3" x2="9" y2="21"></line>
+                            <line x1="3" y1="9" x2="21" y2="9"></line>
+                        </svg>
+                    </div>
+                    <h3>Собственное производство</h3>
+                    <p>Производство материалов STONE</p>
                 </div>
                 <div class="advantage-item">
-                    <h3>Преимущество 3</h3>
-                    <p>Описание преимущества</p>
+                    <div class="advantage-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                        </svg>
+                    </div>
+                    <h3>Импортозамещение</h3>
+                    <p>Материалы в перечне рекомендованных комитетом по сохранению памятников</p>
                 </div>
                 <div class="advantage-item">
-                    <h3>Преимущество 4</h3>
-                    <p>Описание преимущества</p>
+                    <div class="advantage-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <h3>Опытные специалисты</h3>
+                    <p>Команда профессионалов с многолетним опытом</p>
                 </div>
                 <div class="advantage-item">
-                    <h3>Преимущество 5</h3>
-                    <p>Описание преимущества</p>
-                </div>
-                <div class="advantage-item">
-                    <h3>Преимущество 6</h3>
-                    <p>Описание преимущества</p>
+                    <div class="advantage-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                    <h3>Гарантии и контроль качества</h3>
+                    <p>Строгий контроль на всех этапах работы</p>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Documents Section -->
+    <section class="documents-section" id="documents">
+        <div class="container">
+            <h2 class="section-title">Документы</h2>
+            <div class="documents-grid">
+                <div class="document-item">
+                    <img src="img/docs/placeholder.png" alt="Выписка Минкульта" class="document-thumbnail">
+                    <p class="document-title">Выписка Минкульта</p>
+                </div>
+                <div class="document-item">
+                    <img src="img/docs/placeholder.png" alt="Выписка СРО" class="document-thumbnail">
+                    <p class="document-title">Выписка СРО</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Document Modal -->
+    <div class="document-modal" id="document-modal">
+        <div class="document-modal-overlay"></div>
+        <div class="document-modal-content">
+            <button class="document-modal-close" id="document-modal-close">&times;</button>
+            <img src="" alt="" id="document-modal-image">
+        </div>
+    </div>
 
     <!-- Contacts Section -->
     <section class="contacts-section" id="contacts">
@@ -101,14 +277,6 @@
                         <h3>Адрес</h3>
                         <p>Санкт-Петербург, вторая линия Васильевского Острова, дом 5 корпус Б</p>
                     </div>
-                    <div class="contact-item">
-                        <h3>Режим работы</h3>
-                        <p>Пн. – Пт.: с 10:00 до 18:00</p>
-                    </div>
-                    <div class="contact-item">
-                        <h3>Реквизиты</h3>
-                        <p>Здесь будут реквизиты компании</p>
-                    </div>
                 </div>
                 <div class="map-container">
                     <div id="yandex-map"></div>
@@ -120,8 +288,32 @@
     <!-- Footer -->
     <footer class="footer" id="footer">
         <div class="container">
-            <div class="footer-catalog" id="footer-catalog">
-                <!-- Навигация по каталогу будет загружена через JavaScript -->
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4 class="footer-title">Каталог материалов</h4>
+                    <div id="footer-catalog">
+                        <!-- Навигация по каталогу будет загружена через JavaScript -->
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">Контакты</h4>
+                    <div class="footer-links">
+                        <a href="#contacts">Контакты</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">Документы</h4>
+                    <div class="footer-links">
+                        <a href="#documents">Документы</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">Правовая информация</h4>
+                    <div class="footer-links">
+                        <a href="#">Политика конфиденциальности</a>
+                        <a href="#">Пользовательское соглашение</a>
+                    </div>
+                </div>
             </div>
             <div class="footer-bottom">
                 <p>&copy; 2025 ПСР | Материалы для реставрации и строительства</p>

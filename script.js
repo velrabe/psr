@@ -10,6 +10,11 @@ document.addEventListener('DOMContentLoaded', function() {
     initYandexMap();
     initContactCopy();
     initHeroGrid();
+    initContactDropdown();
+    initDocuments();
+    initContactForm();
+    initScrollToTop();
+    initHeaderCatalog();
 });
 
 // Hero grid animation
@@ -101,8 +106,24 @@ async function loadCatalog() {
         }
         
         catalogData = data;
-        renderCatalog();
-        renderFooterCatalog();
+        try {
+            renderCatalog();
+        } catch (error) {
+            console.error('Ошибка при рендеринге каталога:', error);
+        }
+        try {
+            renderFooterCatalog();
+        } catch (error) {
+            console.error('Ошибка при рендеринге каталога в футере:', error);
+        }
+        // Render header catalog menu after a short delay to ensure DOM is ready
+        setTimeout(() => {
+            try {
+                renderHeaderCatalog();
+            } catch (error) {
+                console.error('Ошибка при рендеринге меню каталога в хедере:', error);
+            }
+        }, 100);
         // Check URL params after catalog is loaded
         handleURLParams();
     } catch (error) {
@@ -127,9 +148,27 @@ async function loadCatalog() {
 // Render catalog
 function renderCatalog() {
     const container = document.getElementById('catalog-container');
+    if (!container || !catalogData || !catalogData.categories) {
+        console.error('Ошибка: контейнер каталога не найден или данные не загружены');
+        return;
+    }
+    
     container.innerHTML = '';
 
     catalogData.categories.forEach(category => {
+        // Сначала фильтруем товары - оставляем только те, у которых артикул < 1000
+        const visibleProducts = category.products.filter(product => {
+            const articleMatch = product.name.match(/(\d+)(?:\s|$)/);
+            const article = articleMatch ? articleMatch[1] : product.id.split('-').pop();
+            const articleNumber = parseInt(article, 10);
+            return articleNumber < 1000;
+        });
+        
+        // Если в категории нет видимых товаров - пропускаем категорию
+        if (visibleProducts.length === 0) {
+            return;
+        }
+        
         const categoryBlock = document.createElement('div');
         categoryBlock.className = 'category-block';
         categoryBlock.id = `category-${category.id}`;
@@ -141,16 +180,21 @@ function renderCatalog() {
         const productsGrid = document.createElement('div');
         productsGrid.className = 'products-grid';
 
-        category.products.forEach(product => {
+        visibleProducts.forEach(product => {
+            // Извлекаем артикул из названия (последние цифры)
+            const articleMatch = product.name.match(/(\d+)(?:\s|$)/);
+            const article = articleMatch ? articleMatch[1] : product.id.split('-').pop();
+            
             const productCard = document.createElement('div');
             productCard.className = 'product-card';
             productCard.dataset.productId = product.id;
             productCard.dataset.categoryId = category.id;
             productCard.addEventListener('click', () => openProductModal(product.id, category.id));
-
-            // Извлекаем артикул из названия (последние цифры)
-            const articleMatch = product.name.match(/(\d+)(?:\s|$)/);
-            const article = articleMatch ? articleMatch[1] : product.id.split('-').pop();
+            
+            // Формируем теги
+            const tagsHtml = product.tags && product.tags.length > 0 
+                ? `<div class="product-tags">${product.tags.map(tag => `<span class="product-tag">${tag}</span>`).join('')}</div>`
+                : '';
             
             productCard.innerHTML = `
                 <div class="product-image-placeholder">
@@ -158,6 +202,7 @@ function renderCatalog() {
                 </div>
                 <h4 class="product-title">${product.name}</h4>
                 <p class="product-description">${product.description ? product.description.substring(0, 150) + (product.description.length > 150 ? '...' : '') : ''}</p>
+                ${tagsHtml}
                 <span class="product-more-link">Подробнее <span class="arrow">→</span></span>
             `;
 
@@ -176,6 +221,14 @@ function openProductModal(productId, categoryId) {
     const product = category.products.find(prod => prod.id === productId);
 
     if (!product) return;
+    
+    // Проверяем артикул - не показываем товары с артикулом 1000+
+    const articleMatch = product.name.match(/(\d+)(?:\s|$)/);
+    const article = articleMatch ? articleMatch[1] : product.id.split('-').pop();
+    const articleNumber = parseInt(article, 10);
+    if (articleNumber >= 1000) {
+        return;
+    }
 
     currentProductId = productId;
     const modal = document.getElementById('product-modal');
@@ -219,15 +272,17 @@ function openProductModal(productId, categoryId) {
         return html;
     };
     
-    // Извлекаем артикул из названия
-    const articleMatch = product.name.match(/(\d+)(?:\s|$)/);
-    const article = articleMatch ? articleMatch[1] : product.id.split('-').pop();
+    // Формируем теги для модалки
+    const tagsHtml = product.tags && product.tags.length > 0 
+        ? `<div class="modal-product-tags">${product.tags.map(tag => `<span class="product-tag">${tag}</span>`).join('')}</div>`
+        : '';
     
     modalBody.innerHTML = `
         <div class="modal-product-image-placeholder">
             <span class="product-article">${article}</span>
         </div>
         <h2 class="modal-product-title">${product.name}</h2>
+        ${tagsHtml}
         <div class="modal-product-content">
             ${product.description ? `<div class="modal-section">${formatDescription(product.description)}</div>` : ''}
             ${product.delivery_form ? `
@@ -361,6 +416,14 @@ function openProductFromURL(productId) {
     for (const category of catalogData.categories) {
         const product = category.products.find(p => p.id === productId);
         if (product) {
+            // Проверяем артикул - не показываем товары с артикулом 1000+
+            const articleMatch = product.name.match(/(\d+)(?:\s|$)/);
+            const article = articleMatch ? articleMatch[1] : product.id.split('-').pop();
+            const articleNumber = parseInt(article, 10);
+            if (articleNumber >= 1000) {
+                return; // Не открываем товары с артикулом 1000+
+            }
+            
             // Scroll to category and open modal
             setTimeout(() => {
                 const categoryElement = document.getElementById(`category-${category.id}`);
@@ -382,24 +445,35 @@ function renderFooterCatalog() {
     footerCatalog.innerHTML = '';
 
     catalogData.categories.forEach(category => {
+        // Фильтруем товары с артикулом 1000+
+        const visibleProducts = category.products.filter(product => {
+            const articleMatch = product.name.match(/(\d+)(?:\s|$)/);
+            const article = articleMatch ? articleMatch[1] : product.id.split('-').pop();
+            const articleNumber = parseInt(article, 10);
+            return articleNumber < 1000;
+        });
+
+        // Если в категории нет видимых товаров - пропускаем категорию
+        if (visibleProducts.length === 0) {
+            return;
+        }
+        
         const categoryDiv = document.createElement('div');
         categoryDiv.className = 'footer-category';
 
         const categoryTitle = document.createElement('h4');
         categoryTitle.className = 'footer-category-title';
-        categoryTitle.textContent = category.name;
+        categoryTitle.innerHTML = `
+            <span class="footer-category-name">${category.name}</span>
+            <span class="footer-category-toggle">▼</span>
+        `;
         categoryTitle.style.cursor = 'pointer';
-        categoryTitle.addEventListener('click', () => {
-            const categoryElement = document.getElementById(`category-${category.id}`);
-            if (categoryElement) {
-                categoryElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        });
 
         const productsDiv = document.createElement('div');
         productsDiv.className = 'footer-products';
+        productsDiv.style.display = 'none'; // По умолчанию свернуто
 
-        category.products.forEach(product => {
+        visibleProducts.forEach(product => {
             const productLink = document.createElement('a');
             productLink.className = 'footer-product-link';
             productLink.href = `?product=${product.id}`;
@@ -416,6 +490,16 @@ function renderFooterCatalog() {
             });
 
             productsDiv.appendChild(productLink);
+        });
+
+        // Обработчик клика для разворачивания/сворачивания
+        categoryTitle.addEventListener('click', (e) => {
+            e.preventDefault();
+            const isExpanded = productsDiv.style.display !== 'none';
+            productsDiv.style.display = isExpanded ? 'none' : 'flex';
+            const toggle = categoryTitle.querySelector('.footer-category-toggle');
+            toggle.textContent = isExpanded ? '▼' : '▲';
+            categoryDiv.classList.toggle('expanded', !isExpanded);
         });
 
         categoryDiv.appendChild(categoryTitle);
@@ -512,6 +596,259 @@ function initYandexMap() {
                 '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #666; padding: 20px; text-align: center;">Для отображения карты необходим API ключ Яндекс.Карт. Замените YOUR_API_KEY в index.html на ваш ключ.</div>';
         }
     }, 500);
+}
+
+// Contact Dropdown
+function initContactDropdown() {
+    const contactBtn = document.getElementById('about-contact-btn');
+    const dropdown = document.getElementById('contact-dropdown');
+    const closeBtn = document.getElementById('contact-dropdown-close');
+    
+    if (!contactBtn || !dropdown) return;
+    
+    contactBtn.addEventListener('click', function() {
+        dropdown.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+            dropdown.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    }
+    
+    // Закрытие при клике на overlay
+    const overlay = dropdown.querySelector('.contact-dropdown-overlay');
+    if (overlay) {
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                dropdown.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+    }
+    
+    // Закрытие при нажатии Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && dropdown.classList.contains('active')) {
+            dropdown.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+    
+    // Обработчики кнопок копирования
+    const copyButtons = dropdown.querySelectorAll('.contact-copy-btn');
+    copyButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const textToCopy = this.dataset.copy;
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showCopyFeedback(this);
+                }).catch(err => {
+                    console.error('Ошибка копирования:', err);
+                    fallbackCopy(textToCopy, this);
+                });
+            } else {
+                fallbackCopy(textToCopy, this);
+            }
+        });
+    });
+}
+
+// Показать обратную связь при копировании
+function showCopyFeedback(button) {
+    button.classList.add('copied');
+    const originalTitle = button.getAttribute('title');
+    button.setAttribute('title', 'Скопировано!');
+    
+    setTimeout(() => {
+        button.classList.remove('copied');
+        button.setAttribute('title', originalTitle);
+    }, 2000);
+}
+
+// Documents Modal
+function initDocuments() {
+    const documentItems = document.querySelectorAll('.document-item');
+    const documentModal = document.getElementById('document-modal');
+    const documentModalImage = document.getElementById('document-modal-image');
+    const documentModalClose = document.getElementById('document-modal-close');
+    
+    if (!documentModal || !documentModalImage) return;
+    
+    documentItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const thumbnail = this.querySelector('.document-thumbnail');
+            if (thumbnail) {
+                documentModalImage.src = thumbnail.src;
+                documentModalImage.alt = thumbnail.alt;
+                documentModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    });
+    
+    if (documentModalClose) {
+        documentModalClose.addEventListener('click', function() {
+            documentModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    }
+    
+    // Закрытие при клике на overlay
+    const overlay = documentModal.querySelector('.document-modal-overlay');
+    if (overlay) {
+        overlay.addEventListener('click', function() {
+            documentModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    }
+    
+    // Закрытие при нажатии Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && documentModal.classList.contains('active')) {
+            documentModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+}
+
+// Contact Form
+function initContactForm() {
+    const contactForm = document.getElementById('contact-form');
+    
+    if (!contactForm) return;
+    
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(contactForm);
+        const data = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            phone: formData.get('phone'),
+            message: formData.get('message')
+        };
+        
+        // Здесь можно добавить отправку данных на сервер
+        console.log('Форма отправлена:', data);
+        
+        // Показываем сообщение об успехе
+        alert('Спасибо за ваше сообщение! Мы свяжемся с вами в ближайшее время.');
+        
+        // Очищаем форму
+        contactForm.reset();
+    });
+}
+
+// Scroll to Top Button
+function initScrollToTop() {
+    const scrollBtn = document.getElementById('scroll-to-top');
+    if (!scrollBtn) return;
+    
+    // Показываем/скрываем кнопку при прокрутке
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) {
+            scrollBtn.classList.add('visible');
+        } else {
+            scrollBtn.classList.remove('visible');
+        }
+    });
+    
+    // Прокрутка наверх при клике
+    scrollBtn.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+}
+
+// Header Catalog Dropdown
+function initHeaderCatalog() {
+    const dropdown = document.getElementById('header-catalog-dropdown');
+    const btn = document.getElementById('header-catalog-btn');
+    const menu = document.getElementById('header-catalog-menu');
+    
+    if (!dropdown || !btn || !menu) return;
+    
+    // Открытие/закрытие меню
+    btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('active');
+    });
+    
+    // Закрытие при клике вне меню
+    document.addEventListener('click', function(e) {
+        if (!dropdown.contains(e.target)) {
+            dropdown.classList.remove('active');
+        }
+    });
+    
+    // Закрытие при нажатии Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && dropdown.classList.contains('active')) {
+            dropdown.classList.remove('active');
+        }
+    });
+}
+
+// Render header catalog menu
+function renderHeaderCatalog() {
+    try {
+        const menu = document.getElementById('header-catalog-menu');
+        if (!menu || !catalogData || !catalogData.categories) {
+            return;
+        }
+        
+        menu.innerHTML = '';
+        
+        catalogData.categories.forEach(category => {
+            // Фильтруем товары - оставляем только те, у которых артикул < 1000
+            const visibleProducts = category.products.filter(product => {
+                const articleMatch = product.name.match(/(\d+)(?:\s|$)/);
+                const article = articleMatch ? articleMatch[1] : product.id.split('-').pop();
+                const articleNumber = parseInt(article, 10);
+                return articleNumber < 1000;
+            });
+            
+            // Если в категории нет видимых товаров - пропускаем категорию
+            if (visibleProducts.length === 0) {
+                return;
+            }
+            
+            const categoryLink = document.createElement('a');
+            categoryLink.className = 'header-catalog-item';
+            categoryLink.textContent = category.name;
+            categoryLink.href = `#category-${category.id}`;
+            
+            categoryLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                const categoryElement = document.getElementById(`category-${category.id}`);
+                if (categoryElement) {
+                    const headerHeight = document.getElementById('header').offsetHeight;
+                    const targetPosition = categoryElement.offsetTop - headerHeight;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                    // Закрываем меню после клика
+                    const dropdown = document.getElementById('header-catalog-dropdown');
+                    if (dropdown) {
+                        dropdown.classList.remove('active');
+                    }
+                }
+            });
+            
+            menu.appendChild(categoryLink);
+        });
+    } catch (error) {
+        console.error('Ошибка при рендеринге меню каталога в хедере:', error);
+    }
 }
 
 // Smooth scroll for anchor links
