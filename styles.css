@@ -525,7 +525,6 @@ section {
     font-size: 36px;
     font-weight: 300;
     color: white;
-    min-width: 80px;
 }
 
 .about-feature-text {
@@ -1746,9 +1745,20 @@ section {
         margin-top: 8px;
     }
 
+    .about-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .about-contact-btn,
+    .about-catalog-btn {
+        width: 100%;
+        text-align: center;
+    }
+
     /* Product modal – mobile adjustments */
     .modal-content {
-        padding: 16px 16px 20px;
+        padding: 16px;
         margin: 10px auto;
     }
 
