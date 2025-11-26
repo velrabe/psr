@@ -568,8 +568,14 @@ section {
     color: #ffffff;
 }
 
-.about-contact-btn {
+.about-actions {
     margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.about-contact-btn {
     padding: 14px 32px;
     background: white;
     color: var(--primary-color);
@@ -586,6 +592,18 @@ section {
     color: white;
     border-color: var(--accent-color);
     transform: translateY(-2px);
+}
+
+.about-catalog-btn {
+    background: transparent;
+    color: white;
+    border-color: rgba(255, 255, 255, 0.7);
+}
+
+.about-catalog-btn:hover {
+    background: white;
+    color: var(--primary-color);
+    border-color: white;
 }
 
 /* Contact Dropdown */

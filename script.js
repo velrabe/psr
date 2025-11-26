@@ -962,9 +962,19 @@ function initImportListModal() {
 
     const closeBtn = document.getElementById('import-modal-close');
     const overlay = modal.querySelector('.document-modal-overlay');
+    const iframe = modal.querySelector('iframe');
+    const pdfSrc = iframe ? iframe.getAttribute('src') : null;
 
     const open = (e) => {
         if (e) e.preventDefault();
+
+        // На мобилках открываем PDF в новой вкладке, без модалки
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        if (isMobile && pdfSrc) {
+            window.open(pdfSrc, '_blank');
+            return;
+        }
+
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
     };
