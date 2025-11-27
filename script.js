@@ -690,13 +690,13 @@ function initYandexMap() {
             ymaps.ready(function() {
                 try {
                     const map = new ymaps.Map('yandex-map', {
-                        center: [59.9414, 30.2808], // Координаты Санкт-Петербурга, Васильевский остров
+                        center: [59.939496, 30.290554], // Точные координаты: 2-я линия В.О., д. 5
                         zoom: 15,
                         controls: ['zoomControl', 'fullscreenControl']
                     });
 
                     // Добавляем метку
-                    const placemark = new ymaps.Placemark([59.9414, 30.2808], {
+                    const placemark = new ymaps.Placemark([59.939496, 30.290554], {
                         balloonContent: 'Санкт-Петербург, вторая линия Васильевского Острова, дом 5'
                     }, {
                         preset: 'islands#blueDotIcon'
