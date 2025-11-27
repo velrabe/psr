@@ -697,7 +697,7 @@ function initYandexMap() {
 
                     // Добавляем метку
                     const placemark = new ymaps.Placemark([59.939496, 30.290554], {
-                        balloonContent: 'Санкт-Петербург, вторая линия Васильевского Острова, дом 5'
+                        balloonContent: '2-я линия Васильевского острова, 5 лит. А'
                     }, {
                         preset: 'islands#blueDotIcon'
                     });
